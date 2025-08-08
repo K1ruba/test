@@ -15,7 +15,7 @@ stages:
             displayName: Deploy to cluster
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: '<your-k8s-service-connection-name>'
+              kubernetesServiceEndpoint: 'yuno'
               namespace: default
               command: apply
               useConfigurationFile: true
