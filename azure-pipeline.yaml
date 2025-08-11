@@ -16,7 +16,7 @@ stages:
     jobs:
       - job: BuildAndPush
         pool:
-          vmImage: 'ubuntu-latest'
+          name: minato
         steps:
           - checkout: self
 
