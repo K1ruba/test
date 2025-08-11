@@ -3,19 +3,42 @@ trigger:
     include:
       - main
 
+variables:
+  imageName: 'apache-app'
+  acrName: 'testingcr'
+  acrLoginServer: 'testingcr.azurecr.io'
+  tag: '$(Build.BuildId)'
+  imageFullName: '$(acrLoginServer)/$(imageName):$(tag)'
+
 stages:
+  - stage: BuildAndPush
+    displayName: Build and Push Docker Image
+    jobs:
+      - job: BuildAndPush
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+
+          - task: Docker@2
+            displayName: Build and Push Image to ACR
+            inputs:
+              containerRegistry: 'acr_pipeline'  
+              repository: '$(imageName)'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
+              tags: |
+                $(tag)
+
   - stage: Deploy
+    displayName: Deploy to Kubernetes
+    dependsOn: BuildAndPush
     jobs:
       - job: DeployToK8s
-        displayName: Deploy to Kubernetes
+        displayName: Deploy to AKS
         pool:
-          name: minato
+          name: minato  
         steps:
-          - script: |
-              echo "Debugging files:"
-              ls -l $(Build.SourcesDirectory)
-            displayName: "List Source Directory"
-
           - task: KubernetesManifest@0
             displayName: Deploy to AKS
             inputs:
@@ -25,4 +48,7 @@ stages:
               manifests: |
                 $(Build.SourcesDirectory)/deployment.yaml
                 $(Build.SourcesDirectory)/service.yaml
+              containers: |
+                $(imageFullName)
+
 
