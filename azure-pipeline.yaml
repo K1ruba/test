@@ -20,19 +20,6 @@ stages:
         steps:
           - checkout: self
 
-          - script: |
-              sudo apt-get update
-              sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-              sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-              sudo apt-get update
-              sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-              sudo systemctl start docker
-              sudo systemctl enable docker
-              sudo usermod -aG docker azureuser
-              docker --version
-            displayName: 'Install Docker'
-
           - task: Docker@2
             displayName: Build and Push Image to ACR
             inputs:
@@ -63,3 +50,4 @@ stages:
                 $(Build.SourcesDirectory)/service.yaml
               containers: |
                 $(imageFullName)
+
