@@ -1,19 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp
+  name: apache-deployment
+  labels:
+    app: apache
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: myapp
+      app: apache
   template:
     metadata:
       labels:
-        app: myapp
+        app: apache
     spec:
       containers:
-        - name: myapp
-          image: kirubakaranpriyanka/ecommerce-ui:vi
+        - name: apache
+          image: testingcr.azurecr.io/apache-app:latest  # This will be replaced in pipeline
           ports:
-            - containerPort: 4000
+            - containerPort: 80
+
