@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: apache
-          image: testingcr.azurecr.io/apache-app:latest  # This will be replaced in pipeline
+          image: testingcr.azurecr.io/apache-app:latest
           ports:
             - containerPort: 80
 
