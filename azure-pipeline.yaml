@@ -20,6 +20,6 @@ stages:
               command: apply
               useConfigurationFile: true
               configuration: |
-                $(Build.SourcesDirectory)/deployment.yaml
-                $(Build.SourcesDirectory)/service.yaml
+                deployment.yaml
+                service.yaml
 
