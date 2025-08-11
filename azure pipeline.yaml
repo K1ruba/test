@@ -9,7 +9,7 @@ stages:
       - job: DeployToK8s
         displayName: Deploy to Kubernetes
         pool:
-          vmImage: ubuntu-latest
+          name: minato
         steps:
           - task: Kubernetes@1
             displayName: Deploy to cluster
@@ -22,3 +22,4 @@ stages:
               configuration: |
                 deployment.yaml
                 service.yaml
+
