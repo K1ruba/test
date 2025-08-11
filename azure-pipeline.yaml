@@ -11,6 +11,11 @@ stages:
         pool:
           name: minato
         steps:
+          - script: |
+              echo "Listing directory:"
+              ls -l $(Build.SourcesDirectory)
+            displayName: "Debug: List source directory"
+
           - task: Kubernetes@1
             displayName: Deploy to cluster
             inputs:
@@ -20,6 +25,5 @@ stages:
               command: apply
               useConfigurationFile: true
               configuration: |
-                deployment.yaml
-                service.yaml
-
+                $(Build.SourcesDirectory)/deployment.yaml
+                $(Build.SourcesDirectory)/service.yaml
