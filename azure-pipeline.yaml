@@ -16,14 +16,13 @@ stages:
               ls -l $(Build.SourcesDirectory)
             displayName: "List Source Directory"
 
-          - task: Kubernetes@1
-            displayName: Deploy to cluster
+          - task: KubernetesManifest@0
+            displayName: Deploy to AKS
             inputs:
-              connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceEndpoint: 'yuno'
+              action: deploy
+              kubernetesServiceConnection: 'yuno'
               namespace: default
-              command: apply
-              useConfigurationFile: true
-              filePaths: |
+              manifests: |
                 $(Build.SourcesDirectory)/deployment.yaml
                 $(Build.SourcesDirectory)/service.yaml
+
