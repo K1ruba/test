@@ -34,7 +34,7 @@ stages:
         pool:
           name: minato  
         steps:
-          - task: KubernetesManifest@0
+          - task: KubernetesManifest@1
             displayName: Deploy to AKS
             inputs:
               action: deploy
