@@ -19,11 +19,15 @@ stages:
           name: Default
         steps:
           - checkout: self
-          - script: |
-              sudo docker build -t $(imageFullName) -f $(Build.SourcesDirectory)/Dockerfile $(Build.SourcesDirectory)
-              echo $(ACR_PASSWORD) | sudo docker login $(acrLoginServer) -u $(ACR_USERNAME) --password-stdin
-              sudo docker push $(imageFullName)
-            displayName: 'Build and Push Docker Image (with sudo)'
+          - task: Docker@2
+            displayName: Build and Push to ACR
+            inputs:
+              containerRegistry: 'container'   # Your ACR service connection name
+              repository: 'apache-app'
+              command: 'buildAndPush'
+              Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+              tags: |
+                $(Build.BuildId)
 
   - stage: Deploy
     displayName: Deploy to Kubernetes
