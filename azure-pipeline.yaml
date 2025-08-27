@@ -28,9 +28,11 @@ stages:
               Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
               tags: |
                 $(Build.BuildId)
-          - publish: $(Build.SourcesDirectory)/deployment.yaml
-          - publish: $(Build.SourcesDirectory)/service.yaml 
-
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish manifests"
+            inputs:
+              targetPath: "$(Build.ArtifactStagingDirectory)/manifests"
+              artifact: "manifests"
   # - stage: Deploy
   #   displayName: Deploy to Kubernetes
   #   dependsOn: BuildAndPush
