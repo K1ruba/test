@@ -19,20 +19,32 @@ stages:
           name: Default
         steps:
           - checkout: self
+
+          # Build & Push to ACR
           - task: Docker@2
             displayName: Build and Push to ACR
             inputs:
-              containerRegistry: 'container'   # Your ACR service connection name
+              containerRegistry: 'container'   # <-- your ACR service connection name
               repository: 'apache-app'
               command: 'buildAndPush'
               Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
               tags: |
                 $(Build.BuildId)
+
+          # Copy manifests into artifact staging directory
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/manifests
+              cp $(Build.SourcesDirectory)/deployment.yaml $(Build.ArtifactStagingDirectory)/manifests/
+              cp $(Build.SourcesDirectory)/service.yaml $(Build.ArtifactStagingDirectory)/manifests/
+            displayName: "Prepare Kubernetes manifests"
+
+          # Publish manifests as pipeline artifact
           - task: PublishPipelineArtifact@1
             displayName: "Publish manifests"
             inputs:
               targetPath: "$(Build.ArtifactStagingDirectory)/manifests"
               artifact: "manifests"
+
   # - stage: Deploy
   #   displayName: Deploy to Kubernetes
   #   dependsOn: BuildAndPush
