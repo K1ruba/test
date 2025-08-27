@@ -29,7 +29,6 @@ stages:
           - script: |
               mkdir -p $(Build.ArtifactStagingDirectory)/manifests
               cp $(Build.SourcesDirectory)/deployment.yaml $(Build.ArtifactStagingDirectory)/manifests/
-              cp $(Build.SourcesDirectory)/service.yaml $(Build.ArtifactStagingDirectory)/manifests/
             displayName: "Prepare Kubernetes manifests"
           - task: PublishPipelineArtifact@1
             displayName: "Publish manifests"
