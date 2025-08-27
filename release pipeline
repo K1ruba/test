@@ -15,10 +15,10 @@ stages:
             inputs:
               buildType: 'specific'
               project: 'demo'            
-              definition: '7'             
+              definition: '7'             # Build pipeline ID
               buildVersionToDownload: 'latest'
-              artifactName: 'drop'
-              targetPath: '$(Pipeline.Workspace)/drop'
+              artifactName: 'manifests'  # <-- must match build pipeline
+              targetPath: '$(Pipeline.Workspace)/manifests'
 
           # Deploy manifests to AKS
           - task: KubernetesManifest@1
@@ -27,8 +27,9 @@ stages:
               action: 'deploy'
               kubernetesServiceConnection: 'yuno'  
               namespace: 'default'
-                manifests: |
-                  $(Pipeline.Workspace)/manifests/deployment.yaml
-                  $(Pipeline.Workspace)/manifests/service.yaml
+              manifests: |
+                $(Pipeline.Workspace)/manifests/deployment.yaml
+                $(Pipeline.Workspace)/manifests/service.yaml
               containers: |
                 testingac.azurecr.io/apache-app:$(Build.BuildId)
+
