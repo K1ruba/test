@@ -29,9 +29,7 @@ stages:
               tags: |
                 $(Build.BuildId)
           - publish: $(Build.SourcesDirectory)/deployment.yaml
-            artifact: manifests
-          - publish: $(Build.SourcesDirectory)/service.yaml
-            artifact: manifests     
+          - publish: $(Build.SourcesDirectory)/service.yaml 
 
   # - stage: Deploy
   #   displayName: Deploy to Kubernetes
