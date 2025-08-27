@@ -26,8 +26,8 @@ stages:
               repository: 'apache-app'
               command: 'buildAndPush'
               Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-               tags: |
-                 $(Build.BuildId)
+              tags: |
+                $(Build.BuildId)
           - task: PublishBuildArtifacts@1
             displayName: 'Publish manifests'
             inputs:
