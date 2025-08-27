@@ -1,0 +1,32 @@
+trigger: none
+
+stages:
+  - stage: Deploy
+    displayName: Deploy to AKS
+    jobs:
+      - job: DeployToK8s
+        displayName: Deploy to Kubernetes
+        pool:
+          name: Default
+        steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download build artifacts'
+            inputs:
+              buildType: 'specific'
+              project: 'demo'       
+              definition: '7'
+              buildVersionToDownload: 'latest'
+              artifactName: 'drop'
+              targetPath: '$(Pipeline.Workspace)/drop'
+
+          - task: KubernetesManifest@1
+            displayName: 'Deploy manifests to AKS'
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: 'yuno'   # Your AKS service connection
+              namespace: 'default'
+              manifests: |
+                $(Pipeline.Workspace)/drop/deployment.yaml
+                $(Pipeline.Workspace)/drop/service.yaml
+              containers: |
+                testingac.azurecr.io/apache-app:$(resources.pipeline.buildPipeline.runID)
