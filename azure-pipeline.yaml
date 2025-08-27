@@ -27,26 +27,32 @@ stages:
               command: 'buildAndPush'
               Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
               tags: |
-                $(Build.BuildId)
-
-  - stage: Deploy
-    displayName: Deploy to Kubernetes
-    dependsOn: BuildAndPush
-    jobs:
-      - job: DeployToK8s
-        displayName: Deploy to AKS
-        pool:
-          name: Default  
-        steps:
-          - task: KubernetesManifest@1
-            displayName: Deploy to AKS
+                # Publish Kubernetes manifests as artifact
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish manifests'
             inputs:
-              action: deploy
-              kubernetesServiceConnection: 'yuno'
-              namespace: default
-              manifests: |
-                $(Build.SourcesDirectory)/deployment.yaml
-                $(Build.SourcesDirectory)/service.yaml
-              containers: |
-                $(imageFullName)
+              PathtoPublish: '$(Build.SourcesDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'      
+
+  # - stage: Deploy
+  #   displayName: Deploy to Kubernetes
+  #   dependsOn: BuildAndPush
+  #   jobs:
+  #     - job: DeployToK8s
+  #       displayName: Deploy to AKS
+  #       pool:
+  #         name: Default  
+  #       steps:
+  #         - task: KubernetesManifest@1
+  #           displayName: Deploy to AKS
+  #           inputs:
+  #             action: deploy
+  #             kubernetesServiceConnection: 'yuno'
+  #             namespace: default
+  #             manifests: |
+  #               $(Build.SourcesDirectory)/deployment.yaml
+  #               $(Build.SourcesDirectory)/service.yaml
+  #             containers: |
+  #               $(imageFullName)
 
