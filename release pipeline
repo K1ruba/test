@@ -27,6 +27,5 @@ stages:
               namespace: 'default'
               manifests: |
                 $(System.DefaultWorkingDirectory)/manifests/deployment.yaml
-                $(System.DefaultWorkingDirectory)/manifests/service.yaml
               containers: |
                 testingac.azurecr.io/apache-app:latest
