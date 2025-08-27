@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: apache
-          image: testingac.azurecr.io/apache-app:34
+          image: testingac.azurecr.io/apache-app:$(Build.BuildId)
           ports:
             - containerPort: 80
 
