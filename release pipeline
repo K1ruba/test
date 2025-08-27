@@ -1,4 +1,4 @@
-trigger: none
+trigger: none   
 
 stages:
   - stage: Deploy
@@ -9,24 +9,26 @@ stages:
         pool:
           name: Default
         steps:
+          # Download build artifact from Build pipeline (ID 7)
           - task: DownloadPipelineArtifact@2
             displayName: 'Download build artifacts'
             inputs:
               buildType: 'specific'
-              project: 'demo'       
-              definition: '7'
+              project: 'demo'            
+              definition: '7'             
               buildVersionToDownload: 'latest'
               artifactName: 'drop'
               targetPath: '$(Pipeline.Workspace)/drop'
 
+          # Deploy manifests to AKS
           - task: KubernetesManifest@1
             displayName: 'Deploy manifests to AKS'
             inputs:
               action: 'deploy'
-              kubernetesServiceConnection: 'yuno'   # Your AKS service connection
+              kubernetesServiceConnection: 'yuno'  
               namespace: 'default'
               manifests: |
                 $(Pipeline.Workspace)/drop/deployment.yaml
                 $(Pipeline.Workspace)/drop/service.yaml
               containers: |
-                testingac.azurecr.io/apache-app:$(resources.pipeline.buildPipeline.runID)
+                testingac.azurecr.io/apache-app:$(Build.BuildId)
