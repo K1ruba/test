@@ -5,8 +5,8 @@ trigger:
 
 variables:
   imageName: 'apache-app'
-  acrName: 'testingc'
-  acrLoginServer: 'testingc.azurecr.io'
+  acrName: 'testingac'
+  acrLoginServer: 'testingac.azurecr.io'
   tag: '$(Build.BuildId)'
   imageFullName: '$(acrLoginServer)/$(imageName):$(tag)'
 
