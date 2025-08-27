@@ -28,7 +28,7 @@ stages:
               kubernetesServiceConnection: 'yuno'  
               namespace: 'default'
                 manifests: |
-                  $(Pipeline.Workspace)/deployment.yaml
-                  $(Pipeline.Workspace)/service.yaml
+                  $(Pipeline.Workspace)/manifests/deployment.yaml
+                  $(Pipeline.Workspace)/manifests/service.yaml
               containers: |
                 testingac.azurecr.io/apache-app:$(Build.BuildId)
